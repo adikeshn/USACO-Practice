@@ -18,7 +18,6 @@ bool dfs(int x1, int y1, int x2, int y2)
     else
     {
         vis[x1][y1] = 1;
-
         if (x1 + 1 <= N && found == false && vis[x1 + 1][y1] == 0 && find(connections[grid[x1][y1]].begin(), connections[grid[x1][y1]].end(), grid[x1 + 1][y1]) == connections[grid[x1][y1]].end())
         {
             found = dfs(x1 + 1, y1, x2, y2);
@@ -70,32 +69,20 @@ int main()
         fin >> cows[x][0] >> cows[x][1];
     }
 
-    int vis[101][101];
-
-    for (int x = 0; x < N + 1; x++)
-    {
-        for (int y = 0; y < N + 1; y++)
-        {
-            vis[x][y] = 0;
-        }
-    }
-
     for (int x = 0; x < K; x++)
     {
         for (int y = x + 1; y < K; y++)
         {
-            if (dfs(cows[x][0], cows[x][1], cows[y][0], cows[y][1]) == false)
-            {
-                cout << cows[x][0] << cows[x][1] << cows[y][0] << cows[y][1] << endl;
-                cout << grid[cows[x][0]][cows[x][1]] << grid[cows[y][0]][cows[y][1]] << endl;
-                answer++;
-            }
             for (int z = 1; z < N + 1; z++)
             {
                 for (int v = 1; v < N + 1; v++)
                 {
                     vis[z][v] = 0;
                 }
+            }
+            if (dfs(cows[x][0], cows[x][1], cows[y][0], cows[y][1]) == false)
+            {
+                answer++;
             }
         }
     }
