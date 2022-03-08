@@ -5,6 +5,9 @@
         "vector": "cpp",
         "xstring": "cpp",
         "cmath": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "algorithm": "cpp",
+        "fstream": "cpp",
+        "iterator": "cpp"
     }
 }
