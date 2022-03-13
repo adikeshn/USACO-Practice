@@ -5,7 +5,7 @@ using namespace std;
 
 int main()
 {
-    ifstrea fin("blist.in");
+    ifstream fin("blist.in");
     ofstream fout("blist.out");
     int N;
     fin >> N;
@@ -30,4 +30,3 @@ int main()
     int *answer = max_element(times, times + 1000);
     fout << *answer;
 }
-m
