@@ -17,7 +17,7 @@ int main()
     ofstream fout("rental.out");
     int N, M, R;
     fin >> N >> M >> R;
-    vector<pair<int, int>> price(M);
+    vector<pair<int, int> > price(M);
     vector<int> farms(R), cows(N);
     vector<int> sums(N);
     for (int x = 0; x < N; x++)
