@@ -7,7 +7,7 @@ using namespace std;
 vector<int> pairs[6001], vis(6001, 0);
 int relevance[6001][6001];
 
-int dfs(int start, long long minimum, vector<int> mincount)
+int dfs(int start, long long minimum, int min)
 {
 
     vis[start] = 1;
@@ -16,14 +16,15 @@ int dfs(int start, long long minimum, vector<int> mincount)
     {
         if (vis[x] == 0)
         {
-
-            mincount.push_back(relevance[start][x]);
-            if (*min_element(mincount.begin(), mincount.end()) >= minimum)
+            int prev = min;
+            if (relevance[start][x] < min || min == -1)
+                min = relevance[start][x];
+            if (min >= minimum)
             {
                 current++;
-                current += dfs(x, minimum, mincount);
+                current += dfs(x, minimum, min);
             }
-            mincount.pop_back();
+            min = prev;
         }
     }
     return current;
@@ -48,7 +49,7 @@ int main()
     for (int x = 0; x < Q; x++)
     {
         fin >> a >> b;
-        fout << dfs(b, a, temp) << endl;
+        fout << dfs(b, a, -1) << endl;
         fill(vis.begin(), vis.end(), 0);
     }
 }
