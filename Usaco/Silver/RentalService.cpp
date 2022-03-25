@@ -17,14 +17,15 @@ int main()
     ofstream fout("rental.out");
     int N, M, R;
     fin >> N >> M >> R;
-    vector<pair<int, int> > price(M);
+    vector<pair<long long, long long>> price(M);
     vector<int> farms(R), cows(N);
-    vector<int> sums(N);
+    vector<long long> sums(N), sums2(N);
+    vector<long long> prefix;
     for (int x = 0; x < N; x++)
     {
         fin >> cows[x];
     }
-    sort(cows.begin(), cows.end(), greater<>());
+    sort(cows.begin(), cows.end(), greater<int>());
     for (int x = 0; x < M; x++)
     {
         fin >> price[x].second >> price[x].first;
@@ -34,37 +35,42 @@ int main()
     {
         fin >> farms[x];
     }
-    sort(farms.begin(), farms.end(), greater<>());
-
+    sort(farms.begin(), farms.end(), greater<int>());
+    int n = farms.size() - 1;
+    long long answer = 0;
+    long long b = 0;
+    for (int x = 0; x < M; x++)
+    {
+        for (int y = 0; y < price[x].second; y++)
+        {
+            prefix.push_back(price[x].first + b);
+            b += price[x].first;
+        }
+    }
+    b = 0;
+    long long l = 0;
     for (int x = 0; x < N; x++)
     {
-        int sum = cows[x], curr = 0;
-        while (sum != 0 && price.size() != 0)
+        if (n >= 0 && N - x <= farms.size())
         {
-            if (sum >= price[0].second)
-            {
-                curr += price[0].first * price[0].second;
-                sum -= price[0].second;
-                price.erase(price.begin());
-            }
-            else
-            {
-                curr += price[0].first * (sum);
-                price[0].second -= sum;
-                sum = 0;
-            }
+            sums2[x] = farms[n];
+            n--;
         }
-        sums[x] = curr;
-    }
-    long long answer;
-    for (int x = N - 1; x >= 0; x--)
-    {
-        if (sums[x] < farms[0] && farms.size() != 0)
+        else
         {
-            sums[x] = farms[0];
-            farms.erase(farms.begin());
+            sums2[x] = 0;
         }
-        answer += sums[x];
+        cout << prefix[cows[x] + b - 1] - l << endl;
+        if (cows[x] + b - 1 < prefix.size())
+        {
+            answer += max(prefix[cows[x] + b - 1] - l, sums2[x]);
+            l += prefix[cows[x] + b - 1] - l;
+            b += cows[x];
+        }
+        else
+        {
+            answer += max(prefix[prefix.size() - 1], sum2)
+        }
     }
     fout << answer;
 }
