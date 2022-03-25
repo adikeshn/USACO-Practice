@@ -66,13 +66,11 @@ int main()
                 {
                     inter[east[x].id].push_back(north[y].id);
                     north[y].isactive = false;
-                    //cout << east[x].x << " " << east[x].y << " " << north[y].x << " " << north[y].y << "bad" << endl; //
                 }
                 else if (north[y].x - east[x].x > east[x].y - north[y].y && east[x].isactive && north[y].isactive)
                 {
                     inter[north[y].id].push_back(east[x].id);
                     east[x].isactive = false;
-                    //cout << east[x].x << " " << east[x].y << " " << north[y].x << " " << north[y].y << "good" << endl; //
                 }
             }
         }
