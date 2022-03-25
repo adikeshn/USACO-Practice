@@ -2,60 +2,77 @@
 #include <vector>
 #include <fstream>
 #include <algorithm>
+#include <set>
 using namespace std;
-int C, N;
 
-bool dfs(int chosen, vector<int> &match, int seen[], vector<int> matrix[])
+int C, N;
+struct Time
 {
-    for (int x : matrix[chosen])
-    {
-        if (seen[x] == 0)
-        {
-            seen[x] = 1;
-            if (match[x] == -1 || dfs(match[x], match, seen, matrix))
-            {
-                match[x] = chosen;
-                return true;
-            }
-        }
-    }
-    return false;
+    int time;
+    int id;
+    bool isstart;
+};
+
+bool compare(const Time &a, const Time &b)
+{
+    return a.time < b.time;
 }
+
 int main()
 {
     ifstream fin("helpcross.in");
     ofstream fout("helpcross.out");
     fin >> C >> N;
-    int chicks[C], seen[C] = {}, ans = 0;
-    vector<pair<int, int>> cows(N);
-    vector<int> match(N, -1), matrix[N];
+    int chicks[C], seen[C], ans = 0;
+    bool taken[C];
+    vector<Time> cows;
+    vector<pair<int, int> > times(N);
+    set<int> active;
     for (int x = 0; x < C; x++)
     {
         fin >> chicks[x];
+        taken[x] = false;
     }
     for (int x = 0; x < N; x++)
     {
-        fin >> cows[x].first >> cows[x].second;
+        Time a, b;
+        a.id = x;
+        a.isstart = true;
+        b.id = x;
+        b.isstart = false;
+        fin >> a.time >> b.time;
+        times[x].first = a.time;
+        times[x].second = b.time;
+        cout << a.time << b.time << endl;
+        cows.push_back(a);
+        cows.push_back(b);
     }
     sort(chicks, chicks + C);
-    for (int x = 0; x < N; x++)
+    sort(cows.begin(), cows.end(), compare);
+    for (int x = 0; x < N * 2; x++)
     {
-        for (int y = 0; y < C; y++)
-        {
-            if (chicks[y] >= cows[x].first && chicks[y] <= cows[x].second)
-                matrix[x].push_back(y);
-            else if (chicks[y] > cows[x].second)
-                break;
-        }
+        cout << cows[x].time;
     }
-
-    for (int x = 0; x < N; x++)
+    cout << endl;
+    for (Time x : cows)
     {
-        if (dfs(x, match, seen, matrix))
-            ans++;
-        for (int y = 0; y < C; y++)
+        if (x.isstart == true)
         {
-            seen[y] = 0;
+            active.insert(x.id);
+        }
+        else
+        {
+            for (int y = 0; y < C; y++)
+            {
+                if (chicks[y] >= times[x.id].first && chicks[y] <= times[x.id].second && taken[y] == false)
+                {
+                    cout << times[x.id].first << " " << times[x.id].second << " " << chicks[y] << endl;
+                    taken[y] = true;
+                    ans++;
+                    break;
+                }
+            }
+            active.erase(x.id);
         }
     }
     fout << ans;
