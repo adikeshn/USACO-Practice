@@ -19,9 +19,8 @@ int main()
     {
         fin >> trees[x];
     }
-    int max = *max_element(trees.begin(), trees.end());
     sort(trees.begin(), trees.end(), greater<>());
-    int L = 1, R = max;
+    int L = 1, R = trees[0];
     while (L <= R)
     {
         int mid = L + ((R - L) / 2);
@@ -54,7 +53,7 @@ int solve(vector<int> input, int baskets, int numMax)
         }
         else
         {
-            numMax--;
+            numMax = input[0];
         }
         if (input[0] < input[1])
         {
