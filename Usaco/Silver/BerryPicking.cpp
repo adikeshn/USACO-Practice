@@ -25,7 +25,7 @@ int main()
     {
         int mid = L + ((R - L) / 2);
         int a = solve(trees, K, mid), b = solve(trees, K, mid - 1);
-        if (a > b)
+        if (a >= b && a > answer)
         {
             answer = a;
             L = mid + 1;
@@ -33,7 +33,6 @@ int main()
         else
             R = mid - 1;
     }
-    cout << answer;
     fout << answer;
 }
 
