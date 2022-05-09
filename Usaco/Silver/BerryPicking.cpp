@@ -19,13 +19,13 @@ int main()
     {
         fin >> trees[x];
     }
-    sort(trees.begin(), trees.end(), greater<>());
+    sort(trees.begin(), trees.end(), greater<int>());
     int L = 1, R = trees[0];
     while (L <= R)
     {
         int mid = L + ((R - L) / 2);
         int a = solve(trees, K, mid), b = solve(trees, K, mid - 1);
-        if (a > b)
+        if (a >= b && a > answer)
         {
             answer = a;
             L = mid + 1;
@@ -33,7 +33,6 @@ int main()
         else
             R = mid - 1;
     }
-    cout << answer;
     fout << answer;
 }
 
@@ -57,7 +56,7 @@ int solve(vector<int> input, int baskets, int numMax)
         }
         if (input[0] < input[1])
         {
-            sort(input.begin(), input.end(), greater<>());
+            sort(input.begin(), input.end(), greater<int>());
         }
     }
     return sum;
