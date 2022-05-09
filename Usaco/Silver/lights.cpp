@@ -15,14 +15,16 @@ int N;
 
 int dfs(int x, int y, int count)
 {
-    count += 1;
     vis[x][y] = true;
     for (room m : connected[x][y])
     {
-        light[m.x][m.y] = true;
-        if (access[m.x][m.y] && !vis[m.x][m.y])
+        if (!vis[m.x][m.y])
         {
-            count += dfs(m.x, m.y, 0);
+            light[m.x][m.y] = true;
+            if (access[m.x][m.y])
+            {
+                count += dfs(m.x, m.y, 0);
+            }
         }
     }
     if (x != 0)
@@ -69,5 +71,15 @@ int main()
     }
     light[0][0] = true;
     access[0][0] = true;
-    fout << dfs(0, 0, 0);
+    int count = 0;
+    dfs(0, 0, 1);
+    for (int x = 0; x < N; x++)
+    {
+        for (int y = 0; y < N; y++)
+        {
+            if (light[x][y])
+                count++;
+        }
+    }
+    fout << count;
 }
