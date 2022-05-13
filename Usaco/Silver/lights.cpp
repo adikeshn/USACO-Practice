@@ -1,7 +1,7 @@
-#include <iostream>
+ofg #include<iostream>
 #include <vector>
 #include <fstream>
-using namespace std;
+    using namespace std;
 
 struct room
 {

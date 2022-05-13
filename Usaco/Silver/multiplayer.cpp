@@ -78,7 +78,6 @@ int main()
             }
         }
     }
-    bool vis2[250][250] = {false};
     int max = 0;
     int max2 = 0;
     for (int x = 0; x < N; x++)
@@ -87,17 +86,21 @@ int main()
         {
             int n = dfs(x, y);
             int p = 0, h = 0;
-            if (x < N)
+
+            bool vis2[250][250] = {false};
+            if (x < N - 1)
             {
                 if (grid[x][y] != grid[x + 1][y])
                     p = dfs2(x, y, grid[x][y], grid[x + 1][y], vis2);
             }
-            if (y < N)
+            bool vis3[250][250] = {false};
+            if (y < N - 1)
             {
                 if (grid[x][y] != grid[x][y + 1])
-                    h = dfs2(x, y, grid[x][y], grid[x][y + 1], vis2);
+                    h = dfs2(x, y, grid[x][y], grid[x][y + 1], vis3);
             }
 
+            cout << h << grid[x][y] << grid[x][y + 1] << endl;
             if (h > max2)
                 max2 = h;
             if (p > max2)
@@ -108,7 +111,6 @@ int main()
             }
         }
     }
-
     fout << max << endl
          << max2;
 }
