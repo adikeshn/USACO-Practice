@@ -3,8 +3,10 @@
 #include <algorithm>
 #include <fstream>
 using namespace std;
+
 bool vis[101][101][101] = {false};
 int X, Y, solution = 200, K, M;
+
 void dfs(int currdepth, int curX, int curY)
 {
     if (currdepth > K || vis[curX][curY][currdepth])
