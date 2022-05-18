@@ -26,12 +26,11 @@ int main()
     {
         boot n;
         fin >> n.depth >> n.step;
-        boots.push_back(n);
+        boots[x] = n;
     }
     int curr = 0, currentpos = 0;
     while (currentpos != N - 1)
     {
-        cout << currentpos << endl;
         boot currboot = boots[curr];
         int max = -1;
         for (int x = 1; x <= currboot.step && currentpos + x < N; x++)
@@ -42,7 +41,14 @@ int main()
         if (max != -1)
             currentpos = max;
         else
-            curr++;
+        {
+            int m = 1;
+            while (boots[curr + m].depth < path[currentpos])
+            {
+                m++;
+            }
+            curr += m;
+        }
     }
     fout << curr;
 }
