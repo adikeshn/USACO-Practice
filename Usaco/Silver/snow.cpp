@@ -9,15 +9,40 @@ struct boot
     int depth;
     int step;
 };
+int N, B, ans = 250;
+vector<int> path(250);
+vector<boot> boots(250);
+bool vis[250][250] = {false};
+
+void findmin(int currdepth, int currboot)
+{
+    if (vis[currdepth][currboot])
+        return;
+    vis[currdepth][currboot] = true;
+
+    if (currdepth == N - 1)
+    {
+        ans = min(ans, currboot);
+    }
+
+    for (int x = 1; currboot + x < B; x++)
+    {
+        if (boots[currboot + x].depth >= path[currdepth])
+            findmin(currdepth, currboot + x);
+    }
+
+    for (int x = 1; x <= boots[currboot].step && currdepth + x < N; x++)
+    {
+        if (path[currdepth + x] <= boots[currboot].depth)
+            findmin(currdepth + x, currboot);
+    }
+}
 
 int main()
 {
     ifstream fin("snowboots.in");
     ofstream fout("snowboots.out");
-    int N, B;
     fin >> N >> B;
-    vector<int> path(N);
-    vector<boot> boots(B);
     for (int x = 0; x < N; x++)
     {
         fin >> path[x];
@@ -28,27 +53,6 @@ int main()
         fin >> n.depth >> n.step;
         boots[x] = n;
     }
-    int curr = 0, currentpos = 0;
-    while (currentpos != N - 1)
-    {
-        boot currboot = boots[curr];
-        int max = -1;
-        for (int x = 1; x <= currboot.step && currentpos + x < N; x++)
-        {
-            if (path[currentpos + x] <= currboot.depth)
-                max = currentpos + x;
-        }
-        if (max != -1)
-            currentpos = max;
-        else
-        {
-            int m = 1;
-            while (boots[curr + m].depth < path[currentpos])
-            {
-                m++;
-            }
-            curr += m;
-        }
-    }
-    fout << curr;
+    findmin(0, 0);
+    fout << ans;
 }
