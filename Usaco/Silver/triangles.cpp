@@ -7,16 +7,16 @@
 using namespace std;
 struct point
 {
-    long long int x, y;
+    long long x, y;
 };
 int main()
 {
-    map<int, int> xvals, yvals, xam, yam;
+    map<long long, long long> xvals, yvals, xplus, yplus, xmin, ymin;
     vector<point> points;
     ifstream fin("triangles.in");
     ofstream fout("triangles.out");
     int N;
-    long double ans = 0.0;
+    long long ans = 0;
     fin >> N;
     for (int i = 0; i < N; i++)
     {
@@ -24,35 +24,52 @@ int main()
         fin >> x >> y;
         if (xvals.find(x) != xvals.end())
         {
-            xvals[x] += y;
-            xam[x]++;
+            xvals[x] += abs(y);
+            if (y < 0)
+                xplus[x]++;
+            else
+                xmin[x]++;
         }
         else
         {
-            xvals[x] = y;
-            xam[x] = 1;
+            xvals[x] = abs(y);
+            if (y < 0)
+                xplus[x] = 1;
+            else
+                xmin[x] = 1;
         }
         if (yvals.find(y) != yvals.end())
         {
-            yvals[y] += x;
-            yam[y]++;
+            yvals[y] += abs(x);
+            if (x < 0)
+                yplus[y]++;
+            else
+                ymin[y]++;
         }
         else
         {
-            yvals[y] = x;
-            yam[y] = 1;
+            yvals[y] = abs(x);
+            if (x < 0)
+                yplus[y] = 1;
+            else
+                ymin[y] = 1;
         }
         point n = {x, y};
         points.push_back(n);
     }
     for (point p : points)
     {
-        long double sumx = abs(xvals[p.x] - (xam[p.x] * p.y)), sumy = abs(yvals[p.y] - (yam[p.y] * p.x));
-        cout << p.x << p.y << sumx << sumy << endl;
-        ans += (sumx * sumy) / 2.0;
+        long long sumx, sumy;
+        if (p.y >= 0)
+            sumx = abs(xvals[p.x] - (xmin[p.x] * p.y) + (xplus[p.x] * p.y));
+        else
+            sumx = abs(xvals[p.x] - (xplus[p.x] * abs(p.y)) + (xmin[p.x] * abs(p.y)));
+        if (p.x >= 0)
+            sumy = abs(yvals[p.y] - (ymin[p.y] * p.x) + (yplus[p.y] * p.x));
+        else
+            sumy = abs(yvals[p.y] - (yplus[p.y] * abs(p.x)) + (ymin[p.y] * abs(p.x)));
+        ans += (sumx * sumy);
     }
-    long long int K = 1000000007.0;
-    ans *= 2;
-    fout << (long long int)(ans) % K;
+    fout << ans % 1000000007;
     // iterate using aut
 }
