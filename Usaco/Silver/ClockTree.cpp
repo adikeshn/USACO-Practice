@@ -6,52 +6,66 @@ using namespace std;
 
 vector<int> tree[101];
 vector<int> rooms(101);
+vector<int> s, vis(101, 0), bi, bii;
 int N;
-bool findIfTrue(int start, vector<int> s, int k)
+void findIfTrue(int start, int curr)
 {
-    if (k == N)
-    {
-        return true;
-    }
+    vis[start] = 1;
     for (int x : tree[start])
     {
-        if (s[x] != 0)
+        if (vis[x] == 0)
         {
-            s[x]--;
-            if (s[x] == 0)
+            if (curr == 0)
             {
-                k++;
+                bi.push_back(rooms[x]);
+                findIfTrue(x, 1);
             }
-            if (findIfTrue(x, s, k))
-                return true;
+            else
+            {
+                bii.push_back(rooms[x]);
+                findIfTrue(x, 0);
+            }
         }
     }
-    return false;
 }
 
 int main()
 {
     ifstream fin("clocktree.in");
     ofstream fout("clocktree.out");
-    fin >> N;
+    cin >> N;
     for (int x = 0; x < N; x++)
     {
         int a;
-        fin >> a;
-        rooms[x] = abs(12 - a);
+        cin >> a;
+        rooms[x] = abs(a);
     }
     for (int x = 0; x < N - 1; x++)
     {
         int n, a;
-        fin >> n >> a;
+        cin >> n >> a;
         tree[n - 1].push_back(a - 1);
         tree[a - 1].push_back(n - 1);
     }
     int ans = 0;
-    for (int x = 0; x < N; x++)
+    vector<int> i(101, 0);
+    findIfTrue(0, 0);
+    int sum = 0, suum = 0;
+    for (int x : bi)
     {
-        vector<int> sl = rooms;
-        if (findIfTrue(x, sl, 0))
-            cout << x;
+        cout << x << " ";
+        sum += x;
+        if (sum > 12)
+            sum -= 12;
     }
+    cout << endl;
+    for (int x : bii)
+    {
+        cout << x << " ";
+        suum += x;
+        if (suum > 12)
+            suum -= 12;
+    }
+    cout << endl;
+    cout << suum << sum << endl;
 }
