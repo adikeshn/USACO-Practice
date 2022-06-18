@@ -4,27 +4,25 @@
 #include <fstream>
 using namespace std;
 
-vector<int> tree[101];
-vector<int> rooms(101);
-vector<int> s, vis(101, 0), bi, bii;
+vector<int> tree[2501];
+vector<int> rooms(2501);
+vector<int> s, vis(2501, 0), bi, bii;
 int N;
 void findIfTrue(int start, int curr)
 {
+    if (curr == 0)
+        bi.push_back(rooms[start]);
+    else
+        bii.push_back(rooms[start]);
     vis[start] = 1;
     for (int x : tree[start])
     {
         if (vis[x] == 0)
         {
             if (curr == 0)
-            {
-                bi.push_back(rooms[x]);
                 findIfTrue(x, 1);
-            }
             else
-            {
-                bii.push_back(rooms[x]);
                 findIfTrue(x, 0);
-            }
         }
     }
 }
@@ -33,22 +31,21 @@ int main()
 {
     ifstream fin("clocktree.in");
     ofstream fout("clocktree.out");
-    cin >> N;
+    fin >> N;
     for (int x = 0; x < N; x++)
     {
         int a;
-        cin >> a;
+        fin >> a;
         rooms[x] = abs(a);
     }
     for (int x = 0; x < N - 1; x++)
     {
         int n, a;
-        cin >> n >> a;
+        fin >> n >> a;
         tree[n - 1].push_back(a - 1);
         tree[a - 1].push_back(n - 1);
     }
     int ans = 0;
-    vector<int> i(101, 0);
     findIfTrue(0, 0);
     int sum = 0, suum = 0;
     for (int x : bi)
@@ -66,6 +63,12 @@ int main()
         if (suum > 12)
             suum -= 12;
     }
-    cout << endl;
-    cout << suum << sum << endl;
+    if (sum == suum)
+        fout << N;
+    else if (suum + 1 == sum)
+        fout << bi.size();
+    else if (sum + 1 == suum)
+        fout << bii.size();
+    else
+        fout << 0;
 }
