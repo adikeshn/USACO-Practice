@@ -8,8 +8,8 @@ int FirstValGreaterThan(int ar[], int chosen, int R);
 
 int main()
 {
-    int input[] = {2, 3, 5, 6, 8, 10, 12};
-    cout << FirstValGreaterThan(input, 4, sizeof(input) / sizeof(int)) << endl;
+    int input[] = {2, 3, 5, 6, 8, 10, 12, 11};
+    cout << FirstValGreaterThan(input, 13, sizeof(input) / sizeof(int)) << endl;
 }
 
 int BinarySearch(int ar[], int chosen, int R)
@@ -54,16 +54,14 @@ int FindPerfectSquare(int chosen)
 int FirstValGreaterThan(int ar[], int chosen, int R)
 {
     int L = 0, mid;
-    sort(ar, ar + R - 1);
-    int localmin = ar[R - 1] > chosen ? ar[R - 1] : localmin = -1;
-    if (localmin == -1)
-        return -1;
+    sort(ar, ar + R);
+    int localmin = 0;
     while (L <= R)
     {
         mid = L + ((R - L) / 2);
         if (ar[mid] > chosen)
         {
-            localmin = ar[mid];
+            localmin = mid;
             R = mid - 1;
         }
         else
