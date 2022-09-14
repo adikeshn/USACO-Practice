@@ -1,87 +1,79 @@
 #include <iostream>
 #include <algorithm>
 #include <fstream>
+#include <vector>
 using namespace std;
 
 int main()
 {
     ifstream fin("herding.in");
     ofstream fout("herding.out");
-    int N, min = 0;
+    int N, maximum = 0, minimum = N + 2;
     fin >> N;
-    int max = N - 1;
-    int cows[N];
+    vector<int> cows;
     for (int x = 0; x < N; x++)
     {
-        fin >> cows[x];
+        int a;
+        fin >> a;
+        cows.push_back(a);
     }
-    int curr = 0;
-    sort(cows, cows + N);
-    if (cows[N - 1] - cows[1] > cows[N - 2] - cows[0])
+    sort(cows.begin(), cows.end());
+    maximum = max(cows[N - 1] - cows[1] - (N - 2), cows[N - 2] - cows[0] - (N - 2));
+
+    int p1 = 0, p2 = 1;
+    int m = cows[p1] + (N - 1);
+
+    bool otherTest = false;
+
+    for (int x = 1; x < N; x++)
     {
-        min = cows[N - 1] - cows[1] - (N - 2);
+        if ((x != N - 1 && cows[x] - 1 != cows[x - 1]) || (x == N - 1 && cows[x] <= cows[x - 1] + 2))
+        {
+            otherTest = true;
+            break;
+        }
+    }
+    if (otherTest)
+    {
+        otherTest = false;
+        for (int x = N - 2; x >= 0; x--)
+        {
+            if ((x != 0 && cows[x] + 1 != cows[x + 1]) || (x == 0 && cows[x] >= cows[x + 1] - 2))
+            {
+                otherTest = true;
+                break;
+            }
+        }
+    }
+    if (!otherTest)
+    {
+        fout << 2 << endl;
+        fout << maximum;
+        cout << "enfef";
     }
     else
     {
-        min = cows[N - 2] - cows[0] - (N - 2);
-    }
-    int num_objects = 0;
-    int num_zero = 0;
-    for (int x = 0; x < N - 1; x++)
-    {
-        if (num_objects == 0 && (N - (cows[x + 1] - cows[x] - 1)) - 2 >= 0)
+        while (p1 < N)
         {
-            num_objects = 2;
-            curr = cows[x + 1] - cows[x] - 1;
-            if ((cows[x + 1] - cows[x] - 1) == 0)
+            if (p2 < N)
             {
-                num_zero += 2;
-            }
-        }
-        else if (num_objects > 0 && N - ((cows[x + 1] - cows[x] - 1) + curr) - (num_objects + 1) >= 0)
-        {
-            num_objects++;
-            curr += (cows[x + 1] - cows[x] - 1);
-            if ((cows[x + 1] - cows[x] - 1) == 0)
-            {
-                num_zero++;
-            }
-        }
-
-        else
-        {
-            if (num_zero == N - 1)
-            {
-                if (x == N)
-                {
-                    max = cows[N - 2] - cows[0] - (N - 2);
-                }
+                if (cows[p2] <= m)
+                    p2++;
                 else
                 {
-                    max = cows[N - 1] - cows[1] - (N - 2);
+                    minimum = min(N - (p2 - p1), minimum);
+                    p1++;
+                    m = cows[p1] + (N - 1);
                 }
             }
-            else if (N - num_objects < max)
+            else
             {
-                max = N - num_objects;
+                minimum = min(N - (p2 - p1), minimum);
+                p1++;
+                m = cows[p1] + (N - 1);
             }
-            curr = 0;
-            num_objects = 0;
-            num_zero = 0;
         }
+        fout << minimum << endl
+             << maximum;
     }
-    if (num_zero == N - 1)
-    {
-        max = cows[N - 2] - cows[0] - (N - 2);
-    }
-    else if (N - num_objects < max)
-    {
-        max = N - num_objects;
-    }
-    curr = 0;
-    num_objects = 0;
-    curr = 0;
-    num_objects = 0;
-    fout << max << endl
-         << min;
 }
