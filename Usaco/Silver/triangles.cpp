@@ -4,72 +4,72 @@
 #include <fstream>
 #include <map>
 #include <math.h>
+#include <numeric>
 using namespace std;
 struct point
 {
-    long long x, y;
+    int val;
+    long long dist;
 };
+
+void GetDistance(map<int, long long> input[])
+{
+
+    map<int, long long>::iterator itr;
+
+    for (int i = 0; i < 20001; i++)
+    {
+        int size = input[i].size(), curBehind = 0, prevSum = 0;
+        long long curSum = 0;
+        for (itr = input[i].begin(); itr != input[i].end(); ++itr)
+        {
+            if (itr == input[i].begin())
+            {
+                curSum = std::accumulate(++input[i].begin(), input[i].end(), 0,
+                                         [](auto prev_sum, auto &entry)
+                                         {
+                                             return prev_sum + entry.first;
+                                         });
+                curSum -= itr->first * (size - 1);
+                itr->second = curSum;
+                curBehind++;
+                prevSum = itr->first;
+            }
+            else
+            {
+                int distance = abs(prevSum - itr->first);
+                curSum = curSum - ((curBehind - 1) * distance) + ((size - 1 - curBehind) * distance);
+                itr->second = curSum;
+                prevSum = itr->first;
+                curBehind++;
+            }
+        }
+    }
+}
+
+map<int, long long> xDistance[20001], yDistance[20001];
+vector<pair<int, int>> points;
 int main()
 {
-    map<long long, long long> xvals, yvals, xplus, yplus, xmin, ymin;
-    vector<point> points;
+    int N;
     ifstream fin("triangles.in");
     ofstream fout("triangles.out");
-    int N;
-    long long ans = 0;
     fin >> N;
     for (int i = 0; i < N; i++)
     {
         int x, y;
         fin >> x >> y;
-        if (xvals.find(x) != xvals.end())
-        {
-            xvals[x] += abs(y);
-            if (y < 0)
-                xplus[x]++;
-            else
-                xmin[x]++;
-        }
-        else
-        {
-            xvals[x] = abs(y);
-            if (y < 0)
-                xplus[x] = 1;
-            else
-                xmin[x] = 1;
-        }
-        if (yvals.find(y) != yvals.end())
-        {
-            yvals[y] += abs(x);
-            if (x < 0)
-                yplus[y]++;
-            else
-                ymin[y]++;
-        }
-        else
-        {
-            yvals[y] = abs(x);
-            if (x < 0)
-                yplus[y] = 1;
-            else
-                ymin[y] = 1;
-        }
-        point n = {x, y};
-        points.push_back(n);
+        xDistance[y + 10000].insert(pair<int, long long>(x + 10000, 0));
+        yDistance[x + 10000].insert(pair<int, long long>(y + 10000, 0));
+        points.push_back(pair<int, int>(x + 10000, y + 10000));
     }
-    for (point p : points)
+    GetDistance(xDistance);
+    GetDistance(yDistance);
+    long long ans = 0;
+    for (pair<int, int> point : points)
     {
-        long long sumx, sumy;
-        if (p.y >= 0)
-            sumx = abs(xvals[p.x] - (xmin[p.x] * p.y) + (xplus[p.x] * p.y));
-        else
-            sumx = abs(xvals[p.x] - (xplus[p.x] * abs(p.y)) + (xmin[p.x] * abs(p.y)));
-        if (p.x >= 0)
-            sumy = abs(yvals[p.y] - (ymin[p.y] * p.x) + (yplus[p.y] * p.x));
-        else
-            sumy = abs(yvals[p.y] - (yplus[p.y] * abs(p.x)) + (ymin[p.y] * abs(p.x)));
-        ans += (sumx * sumy);
+        ans += (xDistance[point.second][point.first] * yDistance[point.first][point.second]) % 1000000007;
+        ans %= 1000000007;
     }
-    fout << ans % 1000000007;
-    // iterate using aut
+    fout << ans;
 }
