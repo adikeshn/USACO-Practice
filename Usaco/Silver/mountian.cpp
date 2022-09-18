@@ -3,15 +3,6 @@
 #include <vector>
 #include <algorithm>
 using namespace std;
-struct point
-{
-    int x, y;
-};
-
-bool compare(point a, point b)
-{
-    return a.y > b.y;
-}
 
 int main()
 {
@@ -20,30 +11,45 @@ int main()
     int N;
     fin >> N;
     int answer = N;
-    vector<point> points;
+    int points[N][2];
     int maxs[N][2];
     for (int x = 0; x < N; x++)
     {
-        point a;
-        fin >> a.x >> a.y;
-        points.push_back(a);
+        fin >> points[x][0] >> points[x][1];
     }
-    sort(points.begin(), points.end(), compare);
+
     for (int x = 0; x < N; x++)
     {
-        maxs[x][0] = points[x].x + points[x].y;
-        maxs[x][1] = points[x].x - points[x].y;
-        cout << maxs[x][0] << " " << maxs[x][1] << endl;
+        maxs[x][0] = points[x][0] + points[x][1];
+        maxs[x][1] = points[x][1] - points[x][0];
     }
-    for (int x = 1; x < N; x++)
+
+    qsort(maxs, N, sizeof(*maxs),
+          [](const void *arg1, const void *arg2) -> int
+          {
+              int const *lhs = static_cast<int const *>(arg1);
+              int const *rhs = static_cast<int const *>(arg2);
+              return (lhs[0] < rhs[0]) ? -1
+                                       : ((rhs[0] < lhs[0]) ? 1
+                                                            : (lhs[1] < rhs[1] ? -1
+                                                                               : ((rhs[1] < lhs[1] ? 1 : 0))));
+          });
+
+    for (int x = N - 2; x >= 0; x--)
     {
-        for (int y = 0; y < x; y++)
+        if (maxs[x][1] < maxs[N - 1][1])
         {
-            if (maxs[x][1] > maxs[y][1] && maxs[x][0] < maxs[y][0])
+            answer--;
+        }
+        else
+        {
+            for (int y = N - 2; y > x; y--)
             {
-                cout << x << y;
-                answer--;
-                break;
+                if (maxs[x][1] < maxs[y][1])
+                {
+                    answer--;
+                    break;
+                }
             }
         }
     }
