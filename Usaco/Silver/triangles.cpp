@@ -38,7 +38,8 @@ void GetDistance(map<int, long long> input[])
             else
             {
                 int distance = abs(prevSum - itr->first);
-                curSum = curSum - ((curBehind - 1) * distance) + ((size - 1 - curBehind) * distance);
+                // curSum += (2 * curBehind - size) * (itr->first - prevSum);
+                curSum = curSum + ((curBehind - 1) * distance) - ((size - 1 - curBehind) * distance);
                 itr->second = curSum;
                 prevSum = itr->first;
                 curBehind++;
@@ -68,8 +69,8 @@ int main()
     long long ans = 0;
     for (pair<int, int> point : points)
     {
-        ans += (xDistance[point.second][point.first] * yDistance[point.first][point.second]) % 1000000007;
-        ans %= 1000000007;
+        ans += (xDistance[point.second][point.first] * yDistance[point.first][point.second]);
     }
-    fout << ans;
+    fout << ans % 1000000007;
+    cout << ans % 1000000007;
 }
