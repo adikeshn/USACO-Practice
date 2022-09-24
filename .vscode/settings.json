@@ -61,6 +61,7 @@
         "xmemory": "cpp",
         "xstddef": "cpp",
         "xtr1common": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "bits/stdc++.h": "cpp"
     }
 }
