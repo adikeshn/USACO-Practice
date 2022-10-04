@@ -25,15 +25,12 @@ int main()
     {
         int x, y;
         cin >> x >> y;
-        grid[x + 2000][y + 2000].real = true;
-        if (grid[x + 2000][y + 2000].added && grid[x + 2000][y + 2000].real)
-        {
+        x += 2000, y += 2000;
+        grid[x][y].real = true;
+        if (grid[x][y].added && grid[x][y].real)
             currAns--;
-        }
         else
-        {
-            checkPoint(x + 2000, y + 2000);
-        }
+            checkPoint(x, y);
         ans.push_back(currAns);
     }
     for (int x : ans)
@@ -72,10 +69,6 @@ void findPoint(int x, int y)
 
 void checkValid(int x, int y, int a, int b)
 {
-    if (!(grid[a][b].added && grid[a][b].real))
-    {
-        grid[x][y].around += 1;
-    }
 
     if (grid[x][y].added || grid[x][y].real)
     {
@@ -88,6 +81,11 @@ void checkValid(int x, int y, int a, int b)
 }
 void checkPoint(int x, int y)
 {
+    grid[x + 1][y].around += 1;
+    grid[x - 1][y].around += 1;
+    grid[x][y + 1].around += 1;
+    grid[x][y - 1].around += 1;
+
     if (grid[x][y].around == 3)
     {
         findPoint(x, y);
