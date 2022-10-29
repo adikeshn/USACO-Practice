@@ -4,42 +4,28 @@
 #include <stack>
 using namespace std;
 
-int N, ans = 0;
+long long N, ans = 0;
 vector<int> cows;
-void PrintStack(stack<int> in)
+void PrintStack(stack<int> in, int x)
 {
     while (!in.empty())
     {
-        cout << in.top() << " ";
+        cout << "(" << in.top() + 1 << ", " << x + 1 << ")"
+             << "    ";
         in.pop();
     }
     cout << endl;
 }
 void MonoStack()
 {
-    stack<int> mono_stack, indexStack;
+    stack<int> mono_stack;
     for (int x = 0; x < cows.size(); x++)
     {
-        ans += mono_stack.size();
-        cout << ans << endl;
-
-        while (!mono_stack.empty())
-        {
-            if (mono_stack.top() <= cows[x])
-            {
-                ans -= (x - indexStack.top()) + 1;
-                mono_stack.pop();
-                indexStack.pop();
-            }
-            else
-                break;
-        }
-        cout << ans << endl;
-
-        mono_stack.push(cows[x]);
-        indexStack.push(x);
-        ans++;
-        cout << ans << endl;
+        while (!mono_stack.empty() && cows[mono_stack.top()] < cows[x])
+            mono_stack.pop();
+        if (!mono_stack.empty())
+            ans += (x - mono_stack.top()) + 1;
+        mono_stack.push(x);
     }
 }
 
@@ -53,7 +39,6 @@ int main()
         cows.push_back(y);
     }
     MonoStack();
-    cout << ans << endl;
 
     reverse(cows.begin(), cows.end());
     MonoStack();
