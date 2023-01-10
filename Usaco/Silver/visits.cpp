@@ -27,10 +27,10 @@ int main()
             int chosen = x;
             while (!vis[chosen])
             {
+
                 vis[chosen] = true;
                 path.push_back(buddies[chosen]);
                 int next = buddies[chosen].second;
-
                 if (vis[next])
                 {
                     auto start = find(path.begin(), path.end(), buddies[next]);

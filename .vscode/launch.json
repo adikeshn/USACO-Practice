@@ -11,7 +11,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "C:/Users/adikn/USACO-Practice/Usaco/Silver/${fileBasenameNoExtension}",
+            "program": "C:/Users/adikn/USACO-Practice/Usaco/Silver2/pairedUp.cpp/",
             "args": [],
             "stopAtEntry": true,
             "cwd": "${fileDirname}",
